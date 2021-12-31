@@ -1,2 +1,9 @@
 yo_env
 .idea
+runs
+test data
+yolov5l.pt
+yolov5n.pt
+yolov5s.pt
+yolov5x.pt
+yolov5x6.pt
