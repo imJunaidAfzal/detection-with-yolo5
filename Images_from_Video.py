@@ -1,3 +1,4 @@
+import datetime
 import os
 
 import cv2
@@ -44,6 +45,19 @@ class ImagesFromVideo:
         data = [text, image]
         return data
 
+    def get_frames_times(self,cam):
+        video_frames = cam.get(cv2.CAP_PROP_FRAME_COUNT)
+        fps = int(cam.get(cv2.CAP_PROP_FPS))
+
+        # calculate duration of the video
+        seconds = int(video_frames / fps)
+        video_time = str(datetime.timedelta(seconds=seconds))
+        return {
+            "video_time": video_time,
+            "no_of_frames": video_frames,
+            "frames_per_second": fps
+        }
+
     def processing(self, cam):
         currentframe = 0
         try:
@@ -51,7 +65,8 @@ class ImagesFromVideo:
                 """
                 reading from frames
                 """
-                cam.set(cv2.CAP_PROP_POS_MSEC, (currentframe * 1000))
+                # cam.set(cv2.CAP_PROP_POS_MSEC, (currentframe * 1000))
+
                 ret, frame = cam.read()
                 if ret:
                     """
@@ -66,8 +81,9 @@ class ImagesFromVideo:
                         writing the extracted images
                         """
                         data = self.detect_blur_images(frame)
-                        if data[0] == "Not Blurry":
-                            cv2.imwrite(name, data[1])
+                        cv2.imwrite(name, data[1])
+                        # if data[0] == "Not Blurry":
+                        #     cv2.imwrite(name, data[1])
 
                         """
                         increasing counter so that it will
